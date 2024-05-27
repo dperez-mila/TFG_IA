@@ -1,0 +1,14 @@
+
+Informació de l'activitat:
+    - Nom de l'assignatura: {course.name}
+    - Nom de l'activitat: {assignment.name}
+    - Descripció de l'activitat: {assignment.description}
+    - Nota màxima de l'activitat: {assignment.max_score}
+
+Avaluació del professor col·laborador a partir dels criteris de la rúbrica:
+    - Nota de l'estudiant: {submission.score}
+    - Classificacions dels criteris de la rúbrica assimilats per l'estudiant:
+{assessed_criteria}
+
+Entrega de l'estudiant:
+{attachment_content}

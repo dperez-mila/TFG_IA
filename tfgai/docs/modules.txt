@@ -1,0 +1,55 @@
+
+
+*** CLIENTS ***
+El mòdul de clients representa els clients encarregats de comunicar amb les APIs externes
+amb l'objectiu de generar i obtenir dades de servidors externs. 
+
+Aquest mòdul està dividit en dos submòduls diferents:
+- LMS: conté la interfície LMS, així com una implementació: CanvasLMS. 
+- LLM: conté la interfície LLM i dues implementacions: OpenAILLM i GPT4AllLLM.
+
+Les interfícies s'han creat amb l'objectiu de desacoblar les seves implementacions amb altres
+mòduls del projecte i potenciar tècniques d'injecció de dependències. 
+
+
+*** MODELS ***
+El mòdul de models representen totes aquelles entitats responsables i involucrades en la generació
+d'un feedback de bona qualitat. 
+
+En aquest mòdul, podem trobar les classes indicades a continuació, mapejades segons la seva dependència
+amb una altra classe (sense la creació de la seva dependència, no existiria):
+- Curs
+- Activitat
+    - Lliurament
+        - Adjunt
+- Rúbrica
+    - Criteri
+    - Valoració
+
+Els models s'han creat amb l'objectiu de generalitzar un format únic d'interpretació de les dades entre
+els diferents clients i mòduls del projecte, de manera que pugui ser interpretat qualsevol estructura
+de dades independentment del seu tipus i composició.
+
+
+*** SERVEIS ***
+El mòdul de serveis és un patrò de disseny adaptador, el qual s'encarrega d'adaptar o formatejar les 
+dades obtingudes pels clients en el format únic del projecte: els mòduls. D'aquesta manera, els serveis
+són la via de comunicació entre els dos mòduls anteriors.
+
+En aquest mòdul, podem trobar una implementació per a cada submòdul dels clients; és a dir:
+- Serveis LMS
+- Serveis LLM
+
+Aquestes dues implementacions són totalment independents, i les seves crides s'integren en la classe
+Gestor de Serveis, el qual és una 'façana' que s'encarrega de definir totes les agrupacions d'accions
+definides pels diferents serveis per a oferir un servei íntegre a l'usuari.
+
+
+*** CONTROLADORS ***
+El mòdul de controladors és un patró de disseny que s'encarrega de gestionar les crides a accionar
+segons els inputs generats per les accions de l'usuari. 
+
+En aquest mòdul només trobarem un únic controlador, ja que l'objectiu principal d'aquest és agrupar les
+diferents crides del Gestor de Serveis en dos funcions principals:
+- Generar el feedback de l'estudiant
+- Penjar el feedback al lliurament de l'estudiant
