@@ -1,4 +1,5 @@
 
+from jinja2 import Template
 from .llm_services import LLMService
 from .lms_services import LMSService
 from .database_services import DataManagementService
@@ -17,36 +18,43 @@ class ServiceManager():
         self._lms_service = lms_service
         self._db_service = db_service
 
-    def _add_message(self, content: str, role: str = "user"):
+    def _build_data(self, **data_content):
+        template_content = read_txt_file(PROMPT_TEMPLATE_FILEPATH)
+        template = Template(template_content)
+        rendered_data = template.render(**data_content)
+        print(rendered_data)
+        return rendered_data
+
+    def add_message(self, content: str, role: str = "user"):
         messages = load_json_file(PROMPT_FILEPATH)
         messages.append({"role": role, "content": content})
         dump_json_file(PROMPT_FILEPATH, messages)
 
-    def _get_course_data(self, course_id: str):
+    def get_course_data(self, course_id: str):
         course = self._db_service.get_course(course_id)
         if not course: 
             return None
         return course
 
-    def _get_assignment_data(self, assignment_id: str) -> Assignment:
+    def get_assignment_data(self, assignment_id: str) -> Assignment:
         assignment = self._db_service.get_assignment(assignment_id)
         if not assignment:
             return None
         return assignment
     
-    def _get_rubric_data(self, rubric_id: str):
+    def get_rubric_data(self, rubric_id: str):
         rubric = self._db_service.get_rubric(rubric_id)
         if not rubric:
             return None
         return rubric
     
-    def _get_submission_data(self, assignment_id: str, user_id: str) -> Submission:
+    def get_submission_data(self, assignment_id: str, user_id: str) -> Submission:
         submission = self._db_service.get_submission(assignment_id, user_id)
         if not submission:
             return None
         return submission
     
-    def _get_assessed_rubric_data(self, rubric: Rubric, submission: Submission):
+    def get_assessed_rubric_data(self, rubric: Rubric, submission: Submission) -> Rubric:
         assessed_criteria = []
         for assessment in submission.assessments:
             for criterion in rubric.criteria:
@@ -70,35 +78,6 @@ class ServiceManager():
         if attachment.type == "pdf":
             return extract_text_from_pdf_url(attachment.url)
         return None
-
-    def _build_data(self, course_id: str, assignment_id: str, user_id: str):
-        course = self._get_course_data(course_id)
-        assignment = self._get_assignment_data(assignment_id)
-        rubric = self._get_rubric_data(assignment.rubric_id)
-        submission = self._get_submission_data(assignment_id, user_id)
-        assessed_rubric = self._get_assessed_rubric_data(rubric, submission)
-        assessed_criteria_str = ""
-        for criterion in assessed_rubric.criteria:
-            rating = criterion.ratings[-1]
-            assessed_criteria_str += f"\t- Criteri: {criterion.description}\n"
-            assessed_criteria_str += f"\t\t- Descripció del criteri: {criterion.description}\n"
-            assessed_criteria_str += f"\t\t- Puntuació màxima del criteri: {criterion.max_score}\n"
-            assessed_criteria_str += f"\t\t- Classificació assolida: {rating.description}\n"
-            assessed_criteria_str += f"\t\t- Descripció de la classificació: {rating.long_description}\n"
-            assessed_criteria_str += f"\t\t- Puntuació de la classificació: {rating.max_score}\n"
-            if rating.comment:
-                assessed_criteria_str += f"\t\t- Comentari del professor col·laborador: {rating.comment}\n"
-        attachment_content = self.get_attachment_content(submission.attachment)
-        data = read_txt_file(PROMPT_TEMPLATE_FILEPATH).format(
-            course = course,
-            assignment = assignment,
-            rubric = rubric,
-            submission = submission,
-            assessed_rubric = assessed_rubric,
-            assessed_criteria = assessed_criteria_str,
-            attachment_content = attachment_content
-        )
-        return data
     
     def refresh_course_data(self, course_id: str):
         course = self._lms_service.get_course(course_id)
@@ -132,12 +111,13 @@ class ServiceManager():
     def clear_prompt(self): 
         clear_json_file(PROMPT_FILEPATH)
 
-    def build_prompt(self, course_id: str, assignment_id: str, user_id: str):
-        data = self._build_data(course_id, assignment_id, user_id)
-        self._add_message(data)
+    def build_prompt(self, **data_content):
+        data = self._build_data(**data_content)
+        self.add_message(data)
 
     def generate_response(self): 
         prompt = load_json_file(PROMPT_FILEPATH)
         response = self._llm_service.generate_response(prompt)
+        print(response)
         write_txt_file(RESPONSE_FILEPATH, response)
 
