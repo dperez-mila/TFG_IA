@@ -1,15 +1,13 @@
 
 class Attachment():
 
-    def __init__(self, id: str, submission_id: str, file_name: str, url: str, type: str, size: float,
-                 visibility: dict = None):
+    def __init__(self, id: str, submission_id: str, file_name: str, url: str, type: str, size: float):
         self._id = id
         self._submission_id = submission_id
         self._file_name = file_name
         self._url = url
         self._type = type
         self._size = size
-        self._visibility = visibility
 
     @property
     def id(self) -> str:

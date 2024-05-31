@@ -9,9 +9,10 @@ from ...repositories import (
     RatingRepository,
     SubmissionRepository,
     AttachmentRepository,
-    AssessmentRepository
+    AssessmentRepository,
+    UserRepository
 )
-from ...models import Course, Assignment, Rubric, Submission
+from ...models import Course, Assignment, Rubric, Submission, User
 
 
 class SQLiteService(DataManagementService):
@@ -27,6 +28,7 @@ class SQLiteService(DataManagementService):
             self._submission_repository = SubmissionRepository(db)
             self._attachment_repository = AttachmentRepository(db)
             self._assessment_repository = AssessmentRepository(db)
+            self._user_repository = UserRepository(db)
 
     def get_course(self, course_id: str) -> Course:
         with self._sqlite_db:
@@ -68,7 +70,6 @@ class SQLiteService(DataManagementService):
                 return rubric
             else:
                 return None
-        
     
     def add_rubric(self, rubric: Rubric):
         with self._sqlite_db:
@@ -113,3 +114,17 @@ class SQLiteService(DataManagementService):
             for assessment in submission.assessments:
                 self._assessment_repository.update(assessment)
 
+    def get_user(self, user_id: str):
+        with self._sqlite_db:
+            user = self._user_repository.get(user_id)
+        return user
+    
+    def add_user(self, user: User):
+        with self._sqlite_db:
+            self._user_repository.add(user)
+
+    def update_user(self, user: User):
+        with self._sqlite_db:
+            self._user_repository.update(user)
+
+            

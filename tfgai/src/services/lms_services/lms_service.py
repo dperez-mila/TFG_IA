@@ -1,7 +1,7 @@
 
 from abc import ABC, abstractmethod
 from ...clients import LMSClient
-from ...models import Course, Rubric, Assignment, Submission, Attachment
+from ...models import Course, Rubric, Assignment, Submission, User
 
 
 class LMSService(ABC):
@@ -41,3 +41,6 @@ class LMSService(ABC):
     def get_submission(self, course_id: str, assignment_id: str, user_id: str) -> Submission:
         pass
 
+    @abstractmethod
+    def get_user(self, course_id: str, user_id: str) -> User:
+        pass

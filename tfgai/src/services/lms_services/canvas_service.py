@@ -7,7 +7,8 @@ from ...models import (
     Rating,
     Submission, 
     Attachment, 
-    Assessment
+    Assessment,
+    User
 )
 from . import LMSService
 from ...clients import CanvasClient
@@ -66,6 +67,13 @@ class CanvasService(LMSService):
         rating_id = assessment_dict['id']
         return Assessment(assessment_dict['id'], submission_id, rubric_id, criterion_id, rating_id,assessment_dict['points'], assessment_dict['comments'])
     
+    def _user_mapper(self, user_dict: dict) -> User:
+        first_name = user_dict.get('first_name', "")
+        last_name = user_dict.get("last_name", "")
+        username = user_dict.get("login_id", "")
+        email = user_dict.get("email", "")
+        return User(user_dict["id"], user_dict["name"], first_name, last_name, username, email)
+    
     def get_courses(self) -> list[Course]:
         courses_dict_list = self._lms_client.get_courses()
         courses = [self._course_mapper(course_dict) for course_dict in courses_dict_list]
@@ -105,3 +113,7 @@ class CanvasService(LMSService):
         rubric_id = submission_dict['full_rubric_assessment']['rubric_id']
         return self._submission_mapper(rubric_id, submission_dict)
 
+    def get_user(self, course_id: str, user_id: str) -> User:
+        user_dict = self._lms_client.get_user(course_id, user_id)
+        return self._user_mapper(user_dict)
+    

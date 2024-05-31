@@ -4,9 +4,9 @@ from .llm_services import LLMService
 from .lms_services import LMSService
 from .database_services import DataManagementService
 from ..core import PROMPT_TEMPLATE_FILEPATH, PROMPT_FILEPATH, RESPONSE_FILEPATH
-from ..models import Rubric, Criterion, Rating, Submission, Assignment, Attachment
+from ..models import Rubric, Criterion, Rating, Submission, Assignment, Attachment, User
 from ..utils import load_json_file, dump_json_file, clear_json_file
-from ..utils import extract_text_from_pdf_url
+from ..utils import pdf_content_from_url
 from ..utils import read_txt_file, write_txt_file
 
 
@@ -76,8 +76,11 @@ class ServiceManager():
 
     def get_attachment_content(self, attachment: Attachment) -> str:
         if attachment.type == "pdf":
-            return extract_text_from_pdf_url(attachment.url)
+            return pdf_content_from_url(attachment.url)
         return None
+    
+    def get_user(self, user_id: str) -> User:
+        return self._db_service.get_user(user_id)
     
     def refresh_course_data(self, course_id: str):
         course = self._lms_service.get_course(course_id)
@@ -107,6 +110,14 @@ class ServiceManager():
             self._db_service.add_submission(submission)
         else:
             self._db_service.update_submission(submission)
+
+    def refresh_user_data(self, course_id: str, user_id: str):
+        user = self._lms_service.get_user(course_id, user_id)
+        if not self._db_service.get_user(user_id):
+            self._db_service.add_user(user)
+        else:
+            self._db_service.update_user(user)
+        pass
     
     def clear_prompt(self): 
         clear_json_file(PROMPT_FILEPATH)

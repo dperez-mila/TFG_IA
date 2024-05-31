@@ -2,15 +2,16 @@
 class User(object):
     
     def __init__(self, id: str, full_name: str, first_name: str = "", last_name: str = "",
-                 visibility: dict = None):
+                 username: str = "", email: str = ""):
         self._id = id
         self._full_name = full_name
         self._first_name = first_name
         self._last_name = last_name
-        self._visibility = visibility
+        self._username = username
+        self._email = email
 
     @property
-    def id(self):
+    def id(self) -> str:
         return self._id
     
     @id.setter
@@ -18,7 +19,7 @@ class User(object):
         self._id = id
 
     @property
-    def full_name(self):
+    def full_name(self) -> str:
         return self._full_name
     
     @full_name.setter
@@ -26,7 +27,7 @@ class User(object):
         self._full_name = full_name
 
     @property
-    def first_name(self):
+    def first_name(self) -> str:
         return self._first_name
     
     @first_name.setter
@@ -34,24 +35,27 @@ class User(object):
         self._first_name = first_name
 
     @property
-    def last_name(self):
+    def last_name(self) -> str:
         return self._last_name
     
     @last_name.setter
     def last_name(self, last_name: str):
         self._last_name = last_name
 
-    def __str__(self) -> str:
-        user_info = []
-        user_info.append("INFORMACIÓ DE L'USUARI")
-        if self._visibility == None or self._visibility["id"] == True:
-            user_info.append(f"- Identificador de l'usuari: {self._id}")
-        if self._visibility == None or self._visibility["full_name"] == True:
-            user_info.append(f"- Nom complert de l'usuari: {self._full_name}")
-        if self._visibility == None or self._visibility["first_name"] == True:
-            user_info.append(f"- Nom de l'usuari: {self._first_name}")
-        if self._visibility == None or self._visibility["last_name"] == True:
-            user_info.append(f"- Cognoms de l'usuari: {self._last_name}")
-        return '\n'.join(user_info)
+    @property
+    def username(self) -> str:
+        return self._username
+    
+    @username.setter
+    def username(self, username: str):
+        self._username = username
+
+    @property
+    def email(self) -> str:
+        return self._email
+    
+    @email.setter
+    def email(self, email: str):
+        self._email = email
      
     
