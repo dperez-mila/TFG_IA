@@ -1,10 +1,9 @@
-Feedback de l'entrega de la PAC4 de l'assignatura Prova AD PoC IA:
+Feedback:
 
-En primer lloc, felicitats per haver assolit una nota de 7.0 en aquesta PAC. Has demostrat un coneixement adequat dels conceptes i tècniques relacionades amb el paper de les TIC en les organitzacions, però queda espai per millorar.
+En la teva entrega de la PAC4 de l'assignatura "Administració i Gestió d’Organitzacions" has demostrat un bon domini del contingut i una clara capacitat de síntesi en la resposta a les preguntes teòriques. Has mostrat una adequada comprensió dels conceptes de "Xarxa d’empreses" i "Empresa Xarxa" al vincular-los amb exemples concrets.
 
-En relació als criteris de la rúbrica:
-- En el primer criteri de prova, has aconseguit una puntuació d'aprovat amb una puntuació de 3.0. Continua treballant en la millora de la teva exposició i argumentació per enfortir la qualitat del teu treball.
-- Pel que fa al segon criteri de prova, l'aprovació amb una puntuació de 3.0 posa de manifest una comprensió adequada dels conceptes abordats.
-- Però, en el tercer criteri de prova, malauradament has obtingut una qualificació de suspès amb una puntuació de 2.0. Aprofita per revisar amb detall les raons d'aquesta baixa puntuació i intenta millorar en els aspectes en què no has assolit la competència esperada.
+Pel que fa a la secció de preguntes test, vas respondre correctament la majoria d'elles, demostrant un bon nivell de coneixement sobre les decisions relacionades amb la tecnologia de la informació.
 
-En general, cal destacar que has demostrat comprensió del contingut i has realitzat una anàlisi suficient dels conceptes treballats. Continua posant èmfasi en la reflexió aprofundida i en l'ampliació del teu argumentari per millorar en els aspectes a millorar. Segueix així i aconseguiràs progressar de manera notable en la teva formació acadèmica.
+En l'exercici pràctic, has presentat una anàlisi detallada sobre la possible implementació d'un projecte de tecnologia blockchain en una cadena hotelera, destacant els passos a seguir per aconseguir l'aprovació i els aspectes a tenir en compte durant la seva implantació. No obstant això, s'ha observat una lleugera falta de profunditat en l'exploració d'alguns aspectes clau que podrien enriquir la teva proposta.
+
+En general, la teva entrega ha estat molt bona, mostrant una bona comprensió dels conceptes abordats i una capacitat d'anàlisi adequada. És important mantenir aquest nivell en les properes activitats per continuar millorant en la presentació dels teus arguments i en l'ampliació de les teves idees.

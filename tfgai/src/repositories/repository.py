@@ -1,30 +1,26 @@
 
 from abc import ABC, abstractmethod
-from ..database import DataManagement
+from typing import TypeVar, Generic
+from ..models import Model
 
 
-class Repository(ABC):
-    
-    def __init__(self, db_manager: DataManagement):
-        self._db_manager = db_manager
+T = TypeVar('T', bound=Model)
+
+class Repository(Generic[T], ABC):
 
     @abstractmethod
-    def add(self, item: object):
+    def add(self, obj: T):
         pass
 
     @abstractmethod
-    def get(self, identifier: str) -> object:
+    def get(self, obj_id: str = None, **conditions) -> T:
         pass
 
     @abstractmethod
-    def get_all(self):
+    def update(self, obj_id: str, obj: T):
         pass
 
     @abstractmethod
-    def update(self, item: object):
-        pass
-
-    @abstractmethod
-    def delete(self, identifier: str):
+    def delete(self, obj_id: str):
         pass
 

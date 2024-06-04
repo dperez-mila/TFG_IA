@@ -11,17 +11,5 @@ PROMPT_TEMPLATE_FILEPATH = Path(__file__).parent.parent / "messages" / "prompt_t
 PROMPT_FILEPATH = Path(__file__).parent.parent / "messages" / "prompt.json"
 RESPONSE_FILEPATH = Path(__file__).parent.parent / "messages" / "response.txt"
 
-DB_FILEPATH = "src/data/models.db"
-
-LOCALES = {
-    'ca': {
-        'course': 'Assignatura'
-    },
-    'es-ES': {
-        'course': 'Asignatura'
-    },
-    'en-GB': {
-        'course': 'Course'
-    }
-}
+DB_FILEPATH = Path(__file__).parent.parent / "data" / "models.db"
 

@@ -8,17 +8,25 @@ Informació de l'activitat:
 Avaluació del professor col·laborador a partir dels criteris de la rúbrica:
     - Nota de l'estudiant: {{ submission.score }}
     - Valoració dels criteris de la rúbrica assimilats per l'estudiant:
-    {%- for assessed_criterion in assessed_rubric.criteria %}
+    {%- for criterion in rubric.criterions %}
 
-        - Criteri: {{ assessed_criterion.description }}
-        - Descripció del criteri: {{ assessed_criterion.description }}
-        - Puntuació màxima del criteri: {{ assessed_criterion.max_score }}
-        - Classificació assolida: {{ assessed_criterion.ratings[-1].description }}
-        - Descripció de la classificació: {{ assessed_criterion.ratings[-1].long_description }}
-        - Puntuació de la classificació: {{ assessed_criterion.ratings[-1].max_score }}
-        {%- if assessed_criterion.ratings[-1].comment %}
-        - Comentari del professor col·laborador: {{ assessed_criterion.ratings[-1].comment }}
-        {%- endif %}
+        - Criteri: {{ criterion.description }}
+        - Descripció del criteri: {{ criterion.description }}
+        - Puntuació màxima del criteri: {{ criterion.max_score }}
+        {%- for assessment in submission.assessments %}
+            {%- if assessment.criterion_id == criterion.id %}
+                {%- for rating in criterion.ratings %}
+                    {%- if rating.max_score == assessment.score %}
+            - Classificació assolida: {{ rating.description }}
+            - Descripció de la classificació: {{ rating.long_description }}
+            - Nota de la classificació: {{ assessment.score }}
+                        {%- if assessment.comment %}
+            - Comentari del professor col·laborador: {{ assessment.comment }}
+                        {%- endif %}
+                    {%- endif %}
+                {%- endfor %}
+            {%- endif %}
+        {%- endfor %}
     {%- endfor %}
 
 Entrega de l'estudiant:

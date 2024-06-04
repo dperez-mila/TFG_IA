@@ -31,3 +31,7 @@ class SQLiteDataManagement(DataManagement):
             raise Exception("DataBase connection is not established!")
         return self._cursor.fetchall()
     
+    def get_description(self):
+        return self._cursor.description
+    
+    

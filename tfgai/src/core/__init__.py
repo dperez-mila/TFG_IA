@@ -6,7 +6,6 @@ from .constants import (
     DB_FILEPATH, 
     PROMPT_TEMPLATE_FILEPATH,
     PROMPT_FILEPATH, 
-    RESPONSE_FILEPATH,
-    LOCALES
+    RESPONSE_FILEPATH
 )
 

@@ -1,51 +1,20 @@
 
-class Course():
+from dataclasses import dataclass, field
 
-    def __init__(self, id: str, name: str, language: str, assignments: list[str] = [],
-                 visibility: dict = None):
-        self._id = id
-        self._name = name
-        self._language = language
-        self._assignments = assignments
-        self._visibility = visibility
+from .model import Model
+from .rubric import Rubric
+from .assignment import Assignment
+from .enrollment import Enrollment
+from .user import User
 
-    @property
-    def id(self) -> str:
-        return self._id
-    
-    @id.setter
-    def id(self, id: str):
-        self._id = str(id)
+from ..enums import Language
 
-    @property
-    def name(self) -> str:
-        return self._name
-    
-    @name.setter
-    def name(self, name: str):
-        self._name = str(name)
 
-    @property
-    def language(self) -> str:
-        return self._language
-    
-    @language.setter
-    def language(self, language: str):
-        self._name = str(language)
-
-    @property
-    def assignments(self) -> list[str]:
-        return self._assignments
-    
-    @assignments.setter
-    def assignments(self, assignments: list[str]):
-        self._assignments = assignments
-
-    def __str__(self) -> str:
-        course_info = []
-        course_info.append("Informació de l'assignatura:")
-        course_info.append(f"\t- Nom de l'assignatura: {self._name}")
-        course_info.append(f"\t- Idioma: català")
-        return '\n'.join(course_info)
-    
+@dataclass
+class Course(Model):
+    name: str
+    language: Language
+    rubrics: list[Rubric] = field(default_factory=list)
+    assignments: list[Assignment] = field(default_factory=list)
+    users: list[User] = field(default_factory=list)
     

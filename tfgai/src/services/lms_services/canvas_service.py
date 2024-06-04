@@ -1,119 +1,206 @@
 
-from ...models import (
-    Course,
-    Assignment, 
-    Rubric, 
-    Criterion, 
-    Rating,
-    Submission, 
-    Attachment, 
-    Assessment,
-    User
-)
 from . import LMSService
 from ...clients import CanvasClient
+from ...enums import EnrollmentType
+from ...models import (
+    Model,
+    Course,
+    Assignment,
+    Rubric,
+    Criterion,
+    Rating,
+    Association,
+    Submission,
+    Attachment,
+    Assessment,
+    User,
+    Enrollment
+)
 
 
 class CanvasService(LMSService):
 
-    def __init__(self, base_url, token):
+    _model_mapping: dict = {
+        'course': (Course, {'id': 'id', 'name': 'name', 'locale': 'language'}),
+        'assignment': (Assignment, {'id': 'id', 'name': 'name', 'description': 'description', 
+                                    'points_possible': 'max_score'}),
+        'rubric': (Rubric, {'id': 'id', 'title': 'title', 'points_possible': 'max_score'}),
+        'criterion': (Criterion, {'id': 'id', 'description': 'description', 
+                                  'long_description': 'long_description', 'points': 'max_score'}),
+        'rating': (Rating, {'id': 'id', 'description': 'description', 
+                                  'long_description': 'long_description', 'points': 'max_score'}),
+        'association': (Association, {'id': 'id', 'rubric_id': 'rubric_id', 
+                                      'association_id': 'associated_object_key'}),
+        'submission': (Submission, {'id': 'id', 'score': 'score', 'late': 'late'}),
+        'attachment': (Attachment, {'id': 'id', 'filename': 'file_name', 'mime_class': 'file_extension',
+                                    'size': 'file_size', 'url': 'file_url'}),
+        'assessment': (Assessment, {'id': 'id', 'criterion_id': 'criterion_id', 'points': 'score',
+                                    'comments': 'comments'}),
+        'user': (User, {'id': 'id', 'login_id': 'username', 'email': 'email', 'name': 'full_name',
+                        'first_name': 'first_name', 'last_name': 'last_name'}),
+        'enrollment': (Enrollment, {'id': 'id', 'course_id': 'course_id', 'user_id': 'user_id'})
+    }
+
+    def __init__(self, base_url: str, token: str):
         self._lms_client = CanvasClient(base_url, token)
+    
+    def _create_model(self, model_name: str, data: dict, **params) -> Model:
+        model_info : tuple[Model, dict] = self._model_mapping.get(model_name)
+        if not model_info:
+            raise ValueError(f"Unknown model: {model_name}")
 
-    def _course_mapper(self, course_dict: dict) -> Course:
-        return Course(course_dict['id'], course_dict['name'], course_dict['locale'])
-    
-    def _assignment_mapper(self, assignment_dict: dict) -> Assignment:
-        if 'rubric_settings' not in assignment_dict:
-            raise KeyError("The assignment must contain a rubric!")
-        return Assignment(assignment_dict['id'], assignment_dict['course_id'], 
-                          assignment_dict['rubric_settings']['id'], assignment_dict['name'], 
-                          assignment_dict['description'], assignment_dict['points_possible'])
-    
-    def _rubric_mapper(self, rubric_dict: dict) -> Rubric:
-        rubric_id = rubric_dict['id']
-        rubric_criteria = []
-        for criterion_dict in rubric_dict['data']:
-            ratings = []
-            ratings.extend(self._rating_mapper(criterion_dict['id'], rating) 
-                           for rating in criterion_dict['ratings'])
-            criterion = self._criterion_mapper(rubric_id, criterion_dict, ratings) 
-            rubric_criteria.append(criterion)    
-        return Rubric(rubric_dict['id'], rubric_dict['context_id'], rubric_dict['title'], 
-                      rubric_dict['points_possible'], rubric_criteria)
-            
-    def _criterion_mapper(self, rubric_id: str, criterion_dict: dict, 
-                          ratings: list[Rating]) -> Criterion:
-        return Criterion(criterion_dict['id'], rubric_id, criterion_dict['description'], 
-                         criterion_dict['long_description'], criterion_dict['points'], ratings)
-    
-    def _rating_mapper(self, criterion_id: str, rating_dict: dict) -> Rating:
-        return Rating(rating_dict['id'], criterion_id, rating_dict['description'], 
-                      rating_dict['long_description'], rating_dict['points'])
+        model_class, key_mapping = model_info
 
-    def _submission_mapper(self, rubric_id: str, submission_dict: dict) -> Submission:
-        submission_id = submission_dict['id']
-        attachment = self._attachment_mapper(submission_id, submission_dict['attachments'][-1]) 
-        assessments = [self._assessment_mapper(submission_id, rubric_id, assessment_dict)
-                       for assessment_dict in submission_dict['full_rubric_assessment']['data']]
-        return Submission(submission_id, submission_dict['assignment_id'], submission_dict['user_id'],
-                          submission_dict['grader_id'], submission_dict['score'], submission_dict['late'], attachment, assessments)
+        translated_data : dict = {
+            model_attr: data[dict_key] 
+            for dict_key, model_attr in key_mapping.items() if dict_key in data
+        }
+        
+        return model_class(**translated_data, **params)
 
-    def _attachment_mapper(self, submission_id: str, attachment_dict: dict) -> Attachment:
-        return Attachment(attachment_dict['id'], submission_id, attachment_dict['filename'], attachment_dict['url'], attachment_dict['mime_class'], attachment_dict['size'])
+    def _map_course(self, course_data: dict, **params) -> Course:
+        course: Course = self._create_model('course', course_data, **params)
+        return course
     
-    def _assessment_mapper(self, submission_id: str, rubric_id: str, 
-                           assessment_dict: dict) -> Assessment:
-        criterion_id = assessment_dict['criterion_id']
-        rating_id = assessment_dict['id']
-        return Assessment(assessment_dict['id'], submission_id, rubric_id, criterion_id, rating_id,assessment_dict['points'], assessment_dict['comments'])
+    def _map_assignment(self, assignment_data: dict, **params) -> Assignment:
+        assignment: Assignment = self._create_model('assignment', assignment_data, **params)
+
+        rubric_params: dict = {'course_id': assignment.course_id, 'assignment_id': assignment.id}
+        rubric: Rubric = self._map_rubric(
+            { 'data': assignment_data['rubric'], **assignment_data['rubric_settings']},
+            **rubric_params
+        )
+
+        assignment.rubric = rubric
+
+        return assignment
+
+    def _map_rubric(self, rubric_data: dict, **params) -> Rubric:
+        rubric: Rubric = self._create_model('rubric', rubric_data, **params)
+
+        criterion_params: dict = {'rubric_id': rubric.id}
+        rubric.criterions = [self._map_criterion(criterion_data, **criterion_params) 
+                             for criterion_data in rubric_data['data']]
+        
+        if rubric_data.get('associations', ''):
+            rubric.associations = [self._map_association(association_data)
+                                for association_data in rubric_data['associations']]
+        
+        return rubric
+
+    def _map_criterion(self, criterion_data: dict, **params) -> Criterion:
+        criterion: Criterion = self._create_model('criterion', criterion_data, **params)
+
+        rating_params: dict = {'criterion_id': criterion.id}
+        criterion.ratings = [self._map_rating(rating_data, **rating_params) 
+                             for rating_data in criterion_data['ratings']]
+
+        return criterion
     
-    def _user_mapper(self, user_dict: dict) -> User:
-        first_name = user_dict.get('first_name', "")
-        last_name = user_dict.get("last_name", "")
-        username = user_dict.get("login_id", "")
-        email = user_dict.get("email", "")
-        return User(user_dict["id"], user_dict["name"], first_name, last_name, username, email)
+    def _map_rating(self, rating_data: dict, **params) -> Rating:
+        rating: Rating = self._create_model('rating', rating_data, **params)
+        return rating
     
-    def get_courses(self) -> list[Course]:
-        courses_dict_list = self._lms_client.get_courses()
-        courses = [self._course_mapper(course_dict) for course_dict in courses_dict_list]
+    def _map_association(self, association_data: dict, **params) -> Association:
+        association_type: dict = {
+            'Course': Course,
+            'Assignment': Assignment
+        }
+        _type: Model = association_type.get(association_data['association_type'])
+        params: dict = {'associated_object_type': _type}
+        association: Association = self._create_model('association', association_data, **params)
+        return association
+    
+    def _map_submission(self, submission_data: dict, **params) -> Submission:
+        submission: Submission = self._create_model('submission', submission_data, **params)
+
+        attachment_params: dict = {'submission_id': submission.id}
+        if submission_data.get('attachments', ''):
+            submission.attachment = self._map_attachment(submission_data['attachments'][0], 
+                                                        **attachment_params)
+        
+        if submission_data.get('full_rubric_assessment', {}):
+            assessment_params: dict = {'submission_id': submission.id, 
+                                    'rubric_id': submission_data['full_rubric_assessment']['rubric_id'],
+                                    'association_id': submission_data['full_rubric_assessment']
+                                    ['rubric_association']['id']}
+            submission.assessments = [self._map_assessment(assessment_data, **assessment_params) 
+                                    for assessment_data 
+                                    in submission_data['full_rubric_assessment']['data']]
+
+        return submission
+    
+    def _map_assessment(self, assessment_data: dict, **params) -> Assessment:
+        assessment: Assessment = self._create_model('assessment', assessment_data, **params)
+        return assessment
+
+    def _map_attachment(self, attachment_data: dict, **params) -> Attachment:
+        attachment: Attachment = self._create_model('attachment', attachment_data, **params)
+        return attachment
+    
+    def _map_user(self, user_data: dict, **params) -> User:
+        user: User = self._create_model('user', user_data, **params)
+
+        for enrollment_data in user_data['enrollments']:
+            _type = (EnrollmentType.TEACHER if enrollment_data['type'] == 'TeacherEnrollment' 
+                     else EnrollmentType.STUDENT)
+            enrollment_params: dict = {'type': _type}
+            user.enrollments.append(self._map_enrollment(enrollment_data, **enrollment_params))
+
+        return user
+    
+    def _map_enrollment(self, enrollment_data: dict, **params) -> Enrollment:
+        enrollment: Enrollment = self._create_model('enrollment', enrollment_data, **params)
+        return enrollment
+
+    def get_courses(self, course_id: str = None) -> list[Course]:
+        data: list[dict] = self._lms_client.get_courses(course_id)
+        courses: list[Course] = [self._map_course(course_data) for course_data in data]
+
         return courses
     
-    def get_course(self, course_id) -> Course:
-        course_dict = self._lms_client.get_course(course_id)
-        return self._course_mapper(course_dict)
-    
-    def get_rubrics(self, course_id) -> list[Rubric]:
-        rubrics_dict_list = self._lms_client.get_rubrics(course_id)
-        rubrics = [self._rubric_mapper(rubric_dict) for rubric_dict in rubrics_dict_list]
-        return rubrics
-    
-    def get_rubric(self, course_id, rubric_id) -> Rubric:
-        rubric_dict = self._lms_client.get_rubric(course_id, rubric_id)
-        return self._rubric_mapper(rubric_dict)
-    
-    def get_assignments(self, course_id) -> list[Assignment]:
-        assignments_dict_list = self._lms_client.get_assignments(course_id)
-        assignments = [self._assignment_mapper(assignment_dict) 
-                       for assignment_dict in assignments_dict_list]
+    def get_assignments(self, course_id: str, assignment_id: str = None) -> list[Assignment]:
+        data: list[dict] = self._lms_client.get_assignments(course_id, assignment_id)
+        params: dict = {'course_id': course_id}
+        assignments: list[Assignment] = [self._map_assignment(assignment_data, **params) 
+                            for assignment_data in data]
+
         return assignments
     
-    def get_assignment(self, course_id, assignment_id) -> Assignment:
-        assignment_dict = self._lms_client.get_assignment(course_id, assignment_id)
-        return self._assignment_mapper(assignment_dict)
+    def get_rubrics(self, course_id: str, assignment_id: str, rubric_id: str = None) -> list[Rubric]:
+        data: list[dict] = self._lms_client.get_rubrics(course_id, rubric_id)
+        params: dict = {'course_id': course_id, 'assignment_id': assignment_id}
+        rubrics: list[Rubric] = [self._map_rubric(rubric_data, **params) for rubric_data in data]
+
+        return rubrics
     
-    def get_submissions(self, course_id, assignment_id) -> list[Submission]:
-        submissions_dict_list = self._lms_client.get_submissions(course_id, assignment_id)
-        submissions = [self._submission_mapper(submission_dict) 
-                           for submission_dict in submissions_dict_list]
+    def get_submissions(self, course_id: str, assignment_id: str, 
+                        user_id: str = None) -> list[Submission]:
+        data: list[dict] = self._lms_client.get_submissions(course_id, assignment_id, user_id)
+        params: dict = {'course_id': course_id, 'assignment_id': assignment_id, 'user_id': user_id}
+        submissions: list[Submission] = [self._map_submission(submission_data, **params) 
+                                         for submission_data in data]
+        
         return submissions
     
-    def get_submission(self, course_id: str, assignment_id: str, user_id: str) -> Submission:
-        submission_dict = self._lms_client.get_submission(course_id, assignment_id, user_id)
-        rubric_id = submission_dict['full_rubric_assessment']['rubric_id']
-        return self._submission_mapper(rubric_id, submission_dict)
-
-    def get_user(self, course_id: str, user_id: str) -> User:
-        user_dict = self._lms_client.get_user(course_id, user_id)
-        return self._user_mapper(user_dict)
+    # No permissions to issue this method (!)
+    def get_attachments(self, attachment_id: str = None) -> list[Attachment]:
+        data = self._lms_client.get_attachments(attachment_id)
+        attachments = [self._create_model('attachment', attachment_data) for attachment_data in data]
+        return attachments
     
+    def get_users(self, course_id: str, user_id: str = None) -> list[User]:
+        data = self._lms_client.get_users(course_id, user_id)
+        users = [self._map_user(user_data) for user_data in data]
+        return users
+    
+    def put_submission_comment(self, course_id: str, assignment_id: str, user_id: str, comment: str):
+        self._lms_client.put_submission_comment(course_id, assignment_id, user_id, comment)
+
+    def put_rubric_assessment_comment(self, course_id: str, rubric_association_id: str,
+                                      rubric_assessment_id: str, user_id: str, criterion_id: str,
+                                      comment: str):
+        self._lms_client.put_rubric_assessment_comment(course_id, rubric_association_id, 
+                                                       rubric_assessment_id, user_id, criterion_id, 
+                                                       comment)
+
