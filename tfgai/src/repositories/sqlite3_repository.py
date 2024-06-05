@@ -91,6 +91,9 @@ class SQLite3Repository(Repository[T]):
                 ''')
 
     def _fetch_results(self, query: str, params: tuple = ()) -> list[tuple]:
+        results = []
+        description = ()
+        
         with self._db_manager as db:
             try:
                 db.execute_query(query, params)

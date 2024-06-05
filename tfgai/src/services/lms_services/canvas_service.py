@@ -1,4 +1,6 @@
 
+import logging
+
 from . import LMSService
 from ...clients import CanvasClient
 from ...enums import EnrollmentType
@@ -27,11 +29,11 @@ class CanvasService(LMSService):
         'rubric': (Rubric, {'id': 'id', 'title': 'title', 'points_possible': 'max_score'}),
         'criterion': (Criterion, {'id': 'id', 'description': 'description', 
                                   'long_description': 'long_description', 'points': 'max_score'}),
-        'rating': (Rating, {'id': 'id', 'description': 'description', 
-                                  'long_description': 'long_description', 'points': 'max_score'}),
+        'rating': (Rating, {'description': 'description', 'long_description': 'long_description',
+                            'points': 'max_score'}),
         'association': (Association, {'id': 'id', 'rubric_id': 'rubric_id', 
                                       'association_id': 'associated_object_key'}),
-        'submission': (Submission, {'id': 'id', 'score': 'score', 'late': 'late'}),
+        'submission': (Submission, {'id': 'id', 'score': 'score', 'late': 'late', 'user_id': 'user_id'}),
         'attachment': (Attachment, {'id': 'id', 'filename': 'file_name', 'mime_class': 'file_extension',
                                     'size': 'file_size', 'url': 'file_url'}),
         'assessment': (Assessment, {'id': 'id', 'criterion_id': 'criterion_id', 'points': 'score',
@@ -70,11 +72,10 @@ class CanvasService(LMSService):
             { 'data': assignment_data['rubric'], **assignment_data['rubric_settings']},
             **rubric_params
         )
-
         assignment.rubric = rubric
 
         return assignment
-
+        
     def _map_rubric(self, rubric_data: dict, **params) -> Rubric:
         rubric: Rubric = self._create_model('rubric', rubric_data, **params)
 
@@ -91,9 +92,11 @@ class CanvasService(LMSService):
     def _map_criterion(self, criterion_data: dict, **params) -> Criterion:
         criterion: Criterion = self._create_model('criterion', criterion_data, **params)
 
-        rating_params: dict = {'criterion_id': criterion.id}
-        criterion.ratings = [self._map_rating(rating_data, **rating_params) 
-                             for rating_data in criterion_data['ratings']]
+        rating_params: dict = {'id': f'{criterion.id}_', 'criterion_id': criterion.id}
+        for rating_data in criterion_data['ratings']:
+            rating_params: dict = {'id': f'{criterion.id}_{rating_data.get("id")}', 
+                                   'criterion_id': criterion.id}
+            criterion.ratings.append(self._map_rating(rating_data, **rating_params))
 
         return criterion
     
@@ -112,6 +115,7 @@ class CanvasService(LMSService):
         return association
     
     def _map_submission(self, submission_data: dict, **params) -> Submission:
+        
         submission: Submission = self._create_model('submission', submission_data, **params)
 
         attachment_params: dict = {'submission_id': submission.id}
@@ -119,14 +123,18 @@ class CanvasService(LMSService):
             submission.attachment = self._map_attachment(submission_data['attachments'][0], 
                                                         **attachment_params)
         
-        if submission_data.get('full_rubric_assessment', {}):
-            assessment_params: dict = {'submission_id': submission.id, 
-                                    'rubric_id': submission_data['full_rubric_assessment']['rubric_id'],
-                                    'association_id': submission_data['full_rubric_assessment']
-                                    ['rubric_association']['id']}
-            submission.assessments = [self._map_assessment(assessment_data, **assessment_params) 
-                                    for assessment_data 
-                                    in submission_data['full_rubric_assessment']['data']]
+        if submission_data.get('full_rubric_assessment'):
+            submission.rubric_score = submission_data['full_rubric_assessment']['score']
+            
+            rubric_id: str = submission_data['full_rubric_assessment']['rubric_id']
+            association_id: str = submission_data['full_rubric_assessment']['rubric_association']['id']
+            for assessment_data in submission_data['full_rubric_assessment']['data']:
+                criterion_id = assessment_data['criterion_id']
+                assessment_params: dict = {'submission_id': submission.id, 'rubric_id': rubric_id,
+                                        'rating_id': f"{criterion_id}_{assessment_data['id']}",
+                                        'association_id': association_id}
+                submission.assessments.append(self._map_assessment(assessment_data,
+                                                                   **assessment_params)) 
 
         return submission
     
@@ -163,7 +171,7 @@ class CanvasService(LMSService):
         data: list[dict] = self._lms_client.get_assignments(course_id, assignment_id)
         params: dict = {'course_id': course_id}
         assignments: list[Assignment] = [self._map_assignment(assignment_data, **params) 
-                            for assignment_data in data]
+                            for assignment_data in data if assignment_data.get("rubric")]
 
         return assignments
     
@@ -177,7 +185,7 @@ class CanvasService(LMSService):
     def get_submissions(self, course_id: str, assignment_id: str, 
                         user_id: str = None) -> list[Submission]:
         data: list[dict] = self._lms_client.get_submissions(course_id, assignment_id, user_id)
-        params: dict = {'course_id': course_id, 'assignment_id': assignment_id, 'user_id': user_id}
+        params: dict = {'course_id': course_id, 'assignment_id': assignment_id}
         submissions: list[Submission] = [self._map_submission(submission_data, **params) 
                                          for submission_data in data]
         

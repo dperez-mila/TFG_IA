@@ -6,9 +6,9 @@ from .model import Model
 
 @dataclass
 class Rating(Model):
+    criterion_id: str
     description: str
     long_description: str
     max_score: float
-    criterion_id: str
 
     

@@ -9,6 +9,7 @@ class Assessment(Model):
     rubric_id: str
     association_id: str
     criterion_id: str
+    rating_id: str
     score: float
     comments: str = ""
 

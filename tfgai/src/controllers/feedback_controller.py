@@ -23,7 +23,7 @@ class FeedbackController():
         pass
     
     def get_attachment_content(self, attachment: Attachment, filters: list[str] = []) -> str:
-        attachment_content = self._service_manager.get_attachment_content(attachment)
+        attachment_content = self._service_manager.get_attachment_content(attachment, filters)
         return attachment_content
     
     def get_external_file_content(self, filters: list[str] = []):

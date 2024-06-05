@@ -21,7 +21,7 @@ class ServiceManager():
         self._db_service: DataBaseService = db_service
 
     def _retrieve_data(self, course_id: str = None, assignment_id: str = None, user_id: str = None
-                       ) -> list[Course]: #OK
+                       ) -> list[Course]:
         courses: list[Course] = self._lms_service.get_courses(course_id)
 
         for course in courses:
@@ -32,10 +32,11 @@ class ServiceManager():
             course.assignments = assignments
 
             for assignment in assignments:
-                rubric: Rubric = self._lms_service.get_rubrics(course.id, assignment.id, 
-                                                               assignment.rubric.id)[0]
-                assignment.rubric = rubric
-                course.rubrics.append(rubric)
+                if assignment.rubric:
+                    rubric: Rubric = self._lms_service.get_rubrics(course.id, assignment.id, 
+                                                                assignment.rubric.id)[0]
+                    assignment.rubric = rubric
+                    course.rubrics.append(rubric)
 
                 submissions: list[Submission] = self._lms_service.get_submissions(course.id, 
                                                                                   assignment.id, user_id)
@@ -45,8 +46,8 @@ class ServiceManager():
 
     def filter_out_content(self, content: str, filters: list[str]) -> str:
         filtered_content = content
-        for filter in filters:
-            filtered_content = filtered_content.replace(filter, "")
+        for _filter in filters:
+            filtered_content = filtered_content.replace(_filter, "")
         return filtered_content
 
     def add_message(self, content: str, role: str = "user"): #OK
@@ -77,7 +78,8 @@ class ServiceManager():
                         for submission in assignment.submissions:
                             if not self._db_service.get_submission(submission.id):
                                 self._db_service.add_submission(submission)
-                                self._db_service.add_attachment(submission.attachment)
+                                if submission.attachment:
+                                    self._db_service.add_attachment(submission.attachment)
                                 for assessment in submission.assessments:
                                     self._db_service.add_assessment(assessment)
 
@@ -109,10 +111,12 @@ class ServiceManager():
                                                                         assignment_id = 
                                                                         assignment.id)
                 for submission in assignment.submissions:
-                    submission.attachment = self._db_service.get_attachment(
-                        submission_id = submission.id)[0]
-                    submission.assessments = self._db_service.get_assessment(
-                        submission_id = submission.id)
+                    attachments = self._db_service.get_attachment(submission_id = submission.id)
+                    if attachments:
+                        submission.attachment = attachments[0]
+                    assessments = self._db_service.get_assessment(submission_id = submission.id)
+                    if assessments:
+                        submission.assessments = assessments
                         
             enrolled_users = set()
             enrollments: list[Enrollment] = self._db_service.get_enrollment(course_id = course.id)
@@ -165,11 +169,15 @@ class ServiceManager():
         template_content = read_txt_file(PROMPT_TEMPLATE_FILEPATH)
         template = Template(template_content)
         rendered_data = template.render(**data_content)
-        print(rendered_data)
+        
         self.add_message(rendered_data)
 
     def generate_response(self, **options):
         prompt = load_json_file(PROMPT_FILEPATH)
         response = self._llm_service.generate_response(prompt, **options)
         write_txt_file(RESPONSE_FILEPATH, response)
+
+    def publish_submission_feedback(self, course_id: str, assignment_id: str, user_id: str):
+        comment = read_txt_file(RESPONSE_FILEPATH)
+        self._lms_service.put_submission_comment(course_id, assignment_id, user_id, comment)
 

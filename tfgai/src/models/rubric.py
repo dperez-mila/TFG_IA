@@ -9,10 +9,10 @@ from .association import Association
 
 @dataclass
 class Rubric(Model):
-    title: str
-    max_score: float
     course_id: str
     assignment_id: str
+    title: str
+    max_score: float
     associations: list[Association] = field(default_factory=list)
     criterions: list[Criterion] = field(default_factory=list)
 

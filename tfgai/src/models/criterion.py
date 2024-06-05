@@ -6,10 +6,10 @@ from .rating import Rating
 
 @dataclass
 class Criterion(Model):
+    rubric_id: str
     description: str
     long_description: str
     max_score: float
-    rubric_id: str
     ratings: list[Rating] = field(default_factory=list)
 
    

@@ -11,8 +11,9 @@ class Submission(Model):
     course_id: str
     assignment_id: str
     user_id: str
-    score: float
     late: bool
-    attachment: Attachment | None = None
+    score: float = None
+    rubric_score: float = None
+    attachment: Attachment = None
     assessments: list[Assessment] = field(default_factory=list)
 

@@ -1,33 +1,28 @@
-
-Informació de l'activitat:
+La informació de l'activitat és la següent:
     - Nom de l'assignatura: {{ course.name}}
     - Nom de l'activitat: {{ assignment.name }}
-    - Descripció de l'activitat: {{ assignment.description }}
-    - Nota màxima de l'activitat: {{ assignment.max_score }}
 
-Avaluació del professor col·laborador a partir dels criteris de la rúbrica:
-    - Nota de l'estudiant: {{ submission.score }}
+L'avaluació del professor col·laborador a partir dels criteris de la rúbrica és la següent:
+    - Nota de l'estudiant: {{ submission.rubric_score }} / {{ rubric.max_score }}
     - Valoració dels criteris de la rúbrica assimilats per l'estudiant:
     {%- for criterion in rubric.criterions %}
 
         - Criteri: {{ criterion.description }}
         - Descripció del criteri: {{ criterion.description }}
         - Puntuació màxima del criteri: {{ criterion.max_score }}
-        {%- for assessment in submission.assessments %}
-            {%- if assessment.criterion_id == criterion.id %}
-                {%- for rating in criterion.ratings %}
-                    {%- if rating.max_score == assessment.score %}
-            - Classificació assolida: {{ rating.description }}
-            - Descripció de la classificació: {{ rating.long_description }}
-            - Nota de la classificació: {{ assessment.score }}
-                        {%- if assessment.comment %}
-            - Comentari del professor col·laborador: {{ assessment.comment }}
-                        {%- endif %}
+        {%- for rating in criterion.ratings %}
+            {%- for assessment in submission.assessments %}
+                {%- if assessment.rating_id == rating.id %}
+        - Classificació assolida per l'estudiant: {{ rating.description }}
+        - Descripció de la classificació assolida per l'estudiant: {{ rating.long_description }}
+        - Nota de la classificació assolida per l'estudiant: {{ assessment.score }}
+                    {%- if assessment.comment %}
+        - Comentari del professor col·laborador: {{ assessment.comment }}
                     {%- endif %}
-                {%- endfor %}
-            {%- endif %}
+                {%- endif %}
+            {%- endfor %}
         {%- endfor %}
     {%- endfor %}
 
-Entrega de l'estudiant:
+El contingut del lliurament de l'estudiant és el següent:
 {{ attachment_content }}
