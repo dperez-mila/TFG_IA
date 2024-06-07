@@ -1,28 +1,48 @@
-La informació de l'activitat és la següent:
-    - Nom de l'assignatura: {{ course.name}}
-    - Nom de l'activitat: {{ assignment.name }}
+Genera el feedback del lliurament avaluable d'un estudiant universitari, de l'activitat {{ assignment.name }} de l'assignatura {{course.name}}, basat en els criteris de la rúbrica i l'entrega de l'estudiant.
 
-L'avaluació del professor col·laborador a partir dels criteris de la rúbrica és la següent:
-    - Nota de l'estudiant: {{ submission.rubric_score }} / {{ rubric.max_score }}
-    - Valoració dels criteris de la rúbrica assimilats per l'estudiant:
-    {%- for criterion in rubric.criterions %}
+Criteris de la rúbrica:
+"""
+{%- for criterion in rubric.criterions %}
 
-        - Criteri: {{ criterion.description }}
-        - Descripció del criteri: {{ criterion.description }}
-        - Puntuació màxima del criteri: {{ criterion.max_score }}
+    - Criteri: {{ criterion.description }}
+    - Descripció del criteri: {{ criterion.description }}
         {%- for rating in criterion.ratings %}
             {%- for assessment in submission.assessments %}
                 {%- if assessment.rating_id == rating.id %}
-        - Classificació assolida per l'estudiant: {{ rating.description }}
-        - Descripció de la classificació assolida per l'estudiant: {{ rating.long_description }}
-        - Nota de la classificació assolida per l'estudiant: {{ assessment.score }}
-                    {%- if assessment.comment %}
-        - Comentari del professor col·laborador: {{ assessment.comment }}
-                    {%- endif %}
+    - Classificació assolida per l'estudiant: {{ rating.description }}
+    - Descripció de la classificació: {{ rating.long_description }}
+    - Nota: {{ assessment.score }} / {{ criterion.max_score }}
                 {%- endif %}
             {%- endfor %}
         {%- endfor %}
     {%- endfor %}
+"""
 
-El contingut del lliurament de l'estudiant és el següent:
+Lliurament de l'estudiant:
+"""
 {{ attachment_content }}
+"""
+
+La resposta ha de ser en el següent format JSON:
+{
+  "feedback": {
+    "criterions": [
+      {
+        "name": "[Nom del criteri 1]",
+        "max_score": "[Puntuació màxima del criteri]",
+        "score": "[Puntuació per aquest criteri assolida per l'estudiant]",
+        "comments": "[Comentari específic sobre aquest criteri]"
+      },
+      {
+        "name": "[Nom del criteri 2]",
+        "max_score": "[Puntuació màxima del criteri]",
+        "score": "[Puntuació per aquest criteri assolida per l'estudiant]",
+        "comments": "[Comentari específic sobre aquest criteri]"
+      }
+      // Afegeix més criteris segons sigui necessari
+    ],
+    "general_comments": "[Feedback general sobre el treball de l'estudiant]",
+    "final_score": "[Puntuació total de la rúbrica]"
+  }
+}
+

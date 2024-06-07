@@ -30,8 +30,8 @@ class FeedbackController():
         external_content = self._service_manager.get_external_file_content()
         return external_content
 
-    def clear_prompt(self):
-        self._service_manager.clear_prompt()
+    def clear_prompt(self, roles_to_clear: list[str] = []):
+        self._service_manager.clear_prompt(roles_to_clear)
 
     def generate_prompt(self, **data_content):
         self._service_manager.build_prompt(**data_content)

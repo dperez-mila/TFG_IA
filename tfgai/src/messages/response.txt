@@ -1,5 +1,38 @@
-Enhorabona per l'avaluació del teu lliurament de la PAC1 de l'assignatura Prova AD PoC IA. Has assolit una excel·lent classificació en les preguntes de disseny, mantenint una estructura clara i una presentació immersiva amb imatges de qualitat. En el benchmarking, la teva tasca ha estat notable, destacant punt forts com la gamma cromàtica vibrants i navegació clara, tot i que pots millorar en la personalització de l'experiència de l'usuari. Pel que fa a l'anàlisi heurística, has mostrat un bon control i llibertat però pots treballar en la consistència del disseny i la recuperació d'errors.
-
-Pel contingut, la teva estructura de l'índex i la presentació dels punts forts i febles dels benchmarks són destacables. En els wireframes, has simplificat la navegació i l'experiència en dispositius mòbils, tot i que pots dedicar més atenció a la integració de la identitat de marca en els canvis realitzats.
-
-En resum, has demostrat una comprensió notable dels conceptes i criteris treballats, amb un bon potencial per a futures millores en la cohesió del disseny i l'optimització per a dispositius mòbils. Continua treballant en aquesta línia per aconseguir una experiència més completa i satisfactòria pels usuaris.
+{
+  "feedback": {
+    "criterions": [
+      {
+        "name": "Preguntes de disseny",
+        "max_score": "20.0",
+        "score": "20.0",
+        "comments": "L'estudiant ha abordat de manera excel·lent les preguntes de disseny amb detall i precisió. S'ha proporcionat una anàlisi completa i ben estructurada."
+      },
+      {
+        "name": "Benchmarking",
+        "max_score": "20.0",
+        "score": "16.0",
+        "comments": "L'estudiant ha realitzat un benchmarking detallat i coherent amb les referències proporcionades. S'ha destacat la informació clau de manera clara."
+      },
+      {
+        "name": "Anàlisi heurística",
+        "max_score": "10.0",
+        "score": "8.0",
+        "comments": "L'estudiant ha abordat l'anàlisi heurística amb profressionalitat, tot i que es podrien millorar algunes àrees per a una evaluació més exhaustiva."
+      },
+      {
+        "name": "Arquitectura de la informació",
+        "max_score": "40.0",
+        "score": "32.0",
+        "comments": "L'estudiant ha demostrat una comprensió substancial de l'arquitectura de la informació amb una estructura coherent i ben organitzada."
+      },
+      {
+        "name": "Presentació del document",
+        "max_score": "10.0",
+        "score": "6.0",
+        "comments": "La presentació del document ha sigut satisfactòria, però es podrien millorar aspectes com la consistència visual i la claredat de la informació."
+      }
+    ],
+    "general_comments": "L'estudiant ha presentat un treball global notable, mostrant un bon nivell de comprensió dels conceptes abordats. S'ha destacat la capacitat d'anàlisi i la estructuració de la informació.",
+    "final_score": "82.0"
+  }
+}

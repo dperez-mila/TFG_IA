@@ -162,14 +162,14 @@ class ServiceManager():
 
         return ""
     
-    def clear_prompt(self):
-        clear_json_file(PROMPT_FILEPATH)
+    def clear_prompt(self, roles_to_clear: str = []):
+        clear_json_file(PROMPT_FILEPATH, roles_to_clear)
 
     def build_prompt(self, **data_content):
         template_content = read_txt_file(PROMPT_TEMPLATE_FILEPATH)
         template = Template(template_content)
         rendered_data = template.render(**data_content)
-        
+        print(rendered_data)
         self.add_message(rendered_data)
 
     def generate_response(self, **options):
