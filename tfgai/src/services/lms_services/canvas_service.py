@@ -36,7 +36,7 @@ class CanvasService(LMSService):
         'submission': (Submission, {'id': 'id', 'score': 'score', 'late': 'late', 'user_id': 'user_id'}),
         'attachment': (Attachment, {'id': 'id', 'filename': 'file_name', 'mime_class': 'file_extension',
                                     'size': 'file_size', 'url': 'file_url'}),
-        'assessment': (Assessment, {'id': 'id', 'criterion_id': 'criterion_id', 'points': 'score',
+        'assessment': (Assessment, {'criterion_id': 'criterion_id', 'points': 'score',
                                     'comments': 'comments'}),
         'user': (User, {'id': 'id', 'login_id': 'username', 'email': 'email', 'name': 'full_name',
                         'first_name': 'first_name', 'last_name': 'last_name'}),
@@ -130,9 +130,10 @@ class CanvasService(LMSService):
             association_id: str = submission_data['full_rubric_assessment']['rubric_association']['id']
             for assessment_data in submission_data['full_rubric_assessment']['data']:
                 criterion_id = assessment_data['criterion_id']
-                assessment_params: dict = {'submission_id': submission.id, 'rubric_id': rubric_id,
-                                        'rating_id': f"{criterion_id}_{assessment_data['id']}",
-                                        'association_id': association_id}
+                assessment_params: dict = {'id': f"{criterion_id}_{assessment_data['id']}",
+                                           'submission_id': submission.id, 'rubric_id': rubric_id,
+                                           'rating_id': f"{criterion_id}_{assessment_data['id']}",
+                                           'association_id': association_id}
                 submission.assessments.append(self._map_assessment(assessment_data,
                                                                    **assessment_params)) 
 

@@ -1,17 +1,20 @@
-Genera el feedback del lliurament avaluable d'un estudiant universitari, de l'activitat {{ assignment.name }} de l'assignatura {{course.name}}, basat en els criteris de la rúbrica i l'entrega de l'estudiant.
+Genera el feedback del primer lliurament avaluable d'un estudiant universitari, de l'activitat {{ assignment.name }} de l'assignatura {{course.name}}, basat-te en els criteris d'avaluació de la rúbrica, l'enunciat de l'activitat i el lliurament de l'estudiant. 
 
-Criteris de la rúbrica:
+Criteris d'avaluació de la rúbrica:
 """
 {%- for criterion in rubric.criterions %}
 
     - Criteri: {{ criterion.description }}
-    - Descripció del criteri: {{ criterion.description }}
+    {%- if criterion.long_description %}
+    - Descripció del criteri: {{ criterion.long_description }}
+    {%- endif %}
         {%- for rating in criterion.ratings %}
             {%- for assessment in submission.assessments %}
                 {%- if assessment.rating_id == rating.id %}
     - Classificació assolida per l'estudiant: {{ rating.description }}
     - Descripció de la classificació: {{ rating.long_description }}
-    - Nota: {{ assessment.score }} / {{ criterion.max_score }}
+    - Puntuació màxima del criteri: {{ criterion.max_score }}
+    - Puntuació assolida per l'estudiant: {{ assessment.score }}
                 {%- endif %}
             {%- endfor %}
         {%- endfor %}
@@ -23,26 +26,10 @@ Lliurament de l'estudiant:
 {{ attachment_content }}
 """
 
-La resposta ha de ser en el següent format JSON:
-{
-  "feedback": {
-    "criterions": [
-      {
-        "name": "[Nom del criteri 1]",
-        "max_score": "[Puntuació màxima del criteri]",
-        "score": "[Puntuació per aquest criteri assolida per l'estudiant]",
-        "comments": "[Comentari específic sobre aquest criteri]"
-      },
-      {
-        "name": "[Nom del criteri 2]",
-        "max_score": "[Puntuació màxima del criteri]",
-        "score": "[Puntuació per aquest criteri assolida per l'estudiant]",
-        "comments": "[Comentari específic sobre aquest criteri]"
-      }
-      // Afegeix més criteris segons sigui necessari
-    ],
-    "general_comments": "[Feedback general sobre el treball de l'estudiant]",
-    "final_score": "[Puntuació total de la rúbrica]"
-  }
-}
-
+Per a la millora del rendiment acadèmic de l'estudiant, pots indicar-li que disposa des del Canvas de:
+"""
+- Els materials de l'assignatura.
+- El contacte del professor col·laborador.
+- Els anuncis del professor col·laborador.
+- El fòrum per solventar els dubtes i interactuar amb els companys.
+"""

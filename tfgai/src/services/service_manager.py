@@ -10,7 +10,9 @@ from ..enums import FileExtension
 from ..utils import load_json_file, dump_json_file, clear_json_file
 from ..utils import pdf_content_from_url, pdf_content_from_file_path
 from ..utils import read_txt_file, write_txt_file
-from ..core import PROMPT_TEMPLATE_FILEPATH, PROMPT_FILEPATH, RESPONSE_FILEPATH
+from ..core import (
+    PROMPT_TEMPLATE_FILEPATH, PROMPT_FILEPATH, PROMPT_LAST_MESSAGE_FILEPATH, RESPONSE_FILEPATH
+)
 
 
 class ServiceManager():
@@ -169,7 +171,8 @@ class ServiceManager():
         template_content = read_txt_file(PROMPT_TEMPLATE_FILEPATH)
         template = Template(template_content)
         rendered_data = template.render(**data_content)
-        print(rendered_data)
+        
+        write_txt_file(PROMPT_LAST_MESSAGE_FILEPATH, rendered_data)
         self.add_message(rendered_data)
 
     def generate_response(self, **options):
