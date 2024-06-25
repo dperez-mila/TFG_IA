@@ -1,14 +1,14 @@
-Genera el feedback del primer lliurament avaluable d'un estudiant universitari, de l'activitat Lliurament PAC1 (v2) de l'assignatura Prova AD PoC IA, basat-te en els criteris d'avaluació de la rúbrica, l'enunciat de l'activitat i el lliurament de l'estudiant. 
+Genera el feedback del primer lliurament avaluable d'un estudiant universitari, de l'activitat Lliurament PAC1 (v2) de l'assignatura Prova AD PoC IA, basant-te en els criteris d'avaluació de la rúbrica, l'enunciat de l'activitat i el lliurament de l'estudiant. En cas de puntuació baixa en algun dels criteris de la rúbrica, pots suggerir-li fer servir les eines que té a la seva disposició.
 
 Criteris d'avaluació de la rúbrica:
 """
 
     - Criteri: Preguntes de disseny
     - Descripció del criteri: Resposta clara i concisa a les preguntes de disseny a partir d&#39;una investigació i reflexió prèvies.
-    - Classificació assolida per l'estudiant: Notable
-    - Descripció de la classificació: El criteri es compleix de forma encertada.
+    - Classificació assolida per l'estudiant: Excel·lent
+    - Descripció de la classificació: El criteri es compleix de manera excel·lent.
     - Puntuació màxima del criteri: 20.0
-    - Puntuació assolida per l'estudiant: 16.0
+    - Puntuació assolida per l'estudiant: 20.0
 
     - Criteri: Benchmarking
     - Descripció del criteri: Anàlisi de 5 llocs web de la competència i conclusions.
@@ -37,6 +37,11 @@ Criteris d'avaluació de la rúbrica:
     - Descripció de la classificació: El criteri es compleix de forma satisfactòria.
     - Puntuació màxima del criteri: 10.0
     - Puntuació assolida per l'estudiant: 6.0
+"""
+
+Enunciat de l'activitat:
+"""
+
 """
 
 Lliurament de l'estudiant:
@@ -566,10 +571,9 @@ https://www.figma.com/file/OeAPMsGfHitPZJ8QFWYMbb/Untitled?type=design
 
 """
 
-Per a la millora del rendiment acadèmic de l'estudiant, pots indicar-li que disposa des del Canvas de:
+Eines a disposició de l'estudiant:
 """
 - Els materials de l'assignatura.
-- El contacte del professor col·laborador.
-- Els anuncis del professor col·laborador.
-- El fòrum per solventar els dubtes i interactuar amb els companys.
+- Contactar amb mi per a qualsevol dubte.
+- El fòrum per a solventar els dubtes i interactuar amb els companys.
 """

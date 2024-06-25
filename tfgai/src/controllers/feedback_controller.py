@@ -1,4 +1,6 @@
 
+import json
+
 from ..services.service_manager import ServiceManager
 from ..models import Course, Attachment
 
@@ -11,6 +13,7 @@ class FeedbackController():
     
     def add_data(self, course_id: str = None, assignment_id: str = None, user_id: str = None):
         self._service_manager.add_data(course_id, assignment_id, user_id)
+        self.data = self.get_data()
 
     def get_data(self, course_id: str = None, assignment_id: str = None, user_id: str = None):
         data = self._service_manager.get_data(course_id, assignment_id, user_id)
@@ -44,5 +47,6 @@ class FeedbackController():
         self.generate_response()
 
     def publish_feedback(self, course_id: str, assignment_id: str, user_id: str):
-        pass
-
+        self._service_manager.put_submission_comment(course_id, assignment_id, user_id)
+        self._service_manager.put_rubric_assessment_comments(course_id, assignment_id, user_id)
+        

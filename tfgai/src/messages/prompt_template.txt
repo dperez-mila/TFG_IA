@@ -1,4 +1,4 @@
-Genera el feedback del primer lliurament avaluable d'un estudiant universitari, de l'activitat {{ assignment.name }} de l'assignatura {{course.name}}, basat-te en els criteris d'avaluació de la rúbrica, l'enunciat de l'activitat i el lliurament de l'estudiant. 
+Genera el feedback del primer lliurament avaluable d'un estudiant universitari, de l'activitat {{ assignment.name }} de l'assignatura {{course.name}}, basant-te en els criteris d'avaluació de la rúbrica, l'enunciat de l'activitat i el lliurament de l'estudiant. En cas de puntuació baixa en algun dels criteris de la rúbrica, pots suggerir-li fer servir les eines que té a la seva disposició.
 
 Criteris d'avaluació de la rúbrica:
 """
@@ -21,15 +21,19 @@ Criteris d'avaluació de la rúbrica:
     {%- endfor %}
 """
 
+Enunciat de l'activitat:
+"""
+{{ assignment_statement }}
+"""
+
 Lliurament de l'estudiant:
 """
 {{ attachment_content }}
 """
 
-Per a la millora del rendiment acadèmic de l'estudiant, pots indicar-li que disposa des del Canvas de:
+Eines a disposició de l'estudiant:
 """
 - Els materials de l'assignatura.
-- El contacte del professor col·laborador.
-- Els anuncis del professor col·laborador.
-- El fòrum per solventar els dubtes i interactuar amb els companys.
+- Contactar amb mi per a qualsevol dubte.
+- El fòrum per a solventar els dubtes i interactuar amb els companys.
 """

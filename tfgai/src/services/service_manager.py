@@ -1,4 +1,5 @@
 
+import json
 from jinja2 import Template
 from tkinter import Tk, filedialog
 
@@ -45,7 +46,7 @@ class ServiceManager():
                 assignment.submissions = submissions
 
         return courses
-
+    
     def filter_out_content(self, content: str, filters: list[str]) -> str:
         filtered_content = content
         for _filter in filters:
@@ -180,7 +181,30 @@ class ServiceManager():
         response = self._llm_service.generate_response(prompt, **options)
         write_txt_file(RESPONSE_FILEPATH, response)
 
-    def publish_submission_feedback(self, course_id: str, assignment_id: str, user_id: str):
-        comment = read_txt_file(RESPONSE_FILEPATH)
-        self._lms_service.put_submission_comment(course_id, assignment_id, user_id, comment)
+    def put_submission_comment(self, course_id: str, assignment_id: str, user_id: str):
+        feedback_str = read_txt_file(RESPONSE_FILEPATH)
+        feedback_json = json.loads(feedback_str)["feedback"]         
+        general_comments = f"""
+            {feedback_json["general_comments"]["intro_positive_comments"]}\n
+            {feedback_json["general_comments"]["areas_for_improvement"]}\n
+            {feedback_json["general_comments"]["final_positive_comments"]}
+        """
+        
+        self._lms_service.put_submission_comments(course_id, assignment_id, user_id, general_comments)
+        
+    def put_rubric_assessment_comments(self, course_id: str, assignment_id: str, user_id: str):
+        feedback_str = read_txt_file(RESPONSE_FILEPATH)
+        feedback_json = json.loads(feedback_str)["feedback"]
+        
+        data = self.get_data(course_id, assignment_id, user_id)
+        
+        course = next((element for element in data if element.id == course_id), None)
+        assignment = next((element for element in course.assignments if element.id == assignment_id),
+                          None)
+        submission = next((element for element in assignment.submissions if element.user_id == 
+                           user_id and element.assignment_id == assignment_id), None)
+
+        self._lms_service.put_rubric_assessment_comments(feedback_json, submission, 
+                                                         assignment.rubric)
+        
 

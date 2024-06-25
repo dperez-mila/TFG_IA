@@ -128,9 +128,10 @@ class CanvasService(LMSService):
             
             rubric_id: str = submission_data['full_rubric_assessment']['rubric_id']
             association_id: str = submission_data['full_rubric_assessment']['rubric_association']['id']
+            assessment_id: str = submission_data['full_rubric_assessment']['id']
             for assessment_data in submission_data['full_rubric_assessment']['data']:
                 criterion_id = assessment_data['criterion_id']
-                assessment_params: dict = {'id': f"{criterion_id}_{assessment_data['id']}",
+                assessment_params: dict = {'id': f"{criterion_id}_{assessment_id}",
                                            'submission_id': submission.id, 'rubric_id': rubric_id,
                                            'rating_id': f"{criterion_id}_{assessment_data['id']}",
                                            'association_id': association_id}
@@ -203,13 +204,41 @@ class CanvasService(LMSService):
         users = [self._map_user(user_data) for user_data in data]
         return users
     
-    def put_submission_comment(self, course_id: str, assignment_id: str, user_id: str, comment: str):
-        self._lms_client.put_submission_comment(course_id, assignment_id, user_id, comment)
+    def put_submission_comments(self, course_id: str, assignment_id: str, user_id: str, 
+                                comments: str):        
+        data = {
+            "comment": {
+                "text_comment": comments
+            }
+        }
+        
+        self._lms_client.put_submission_comment(course_id, assignment_id, user_id, data)
 
-    def put_rubric_assessment_comment(self, course_id: str, rubric_association_id: str,
-                                      rubric_assessment_id: str, user_id: str, criterion_id: str,
-                                      comment: str):
-        self._lms_client.put_rubric_assessment_comment(course_id, rubric_association_id, 
-                                                       rubric_assessment_id, user_id, criterion_id, 
-                                                       comment)
+    def put_rubric_assessment_comments(self, response: dict, submission: Submission, rubric: Rubric):
+        association_id = next((element.id for element in rubric.associations 
+                               if element.associated_object_key == submission.assignment_id))
+        base_assessment = submission.assessments[0]
+        full_assessment_id = base_assessment.id.replace(f"{base_assessment.criterion_id}_", "")
+        
+        rubric_assessment_dict = {}
+        rubric_assessment_dict["user_id"] = submission.user_id
+        rubric_assessment_dict["assessment_type"] = "grading"
+        
+        for assessment in submission.assessments:
+            criterion_id = assessment.criterion_id
+            criterion = next((element for element in rubric.criterions if element.id ==
+                              criterion_id), None)
+            assessment_comments = next((element["comments"] for element in response["criterions"] 
+                                       if element["name"] == criterion.description))
+            rubric_assessment_dict[f"criterion_{criterion_id}"] = {
+                "points": assessment.score,
+                "comments": assessment_comments
+            }
+        
+        data = {
+            "rubric_assessment": rubric_assessment_dict
+        }
+
+        self._lms_client.put_rubric_assessment_comments(submission.course_id, association_id, 
+                                                       full_assessment_id, data)
 

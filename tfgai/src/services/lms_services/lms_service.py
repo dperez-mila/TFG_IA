@@ -35,12 +35,13 @@ class LMSService(ABC):
         pass
     
     @abstractmethod
-    def put_submission_comment(self, course_id: str, assignment_id: str, user_id: str, comment: str):
+    def put_submission_comments(self, course_id: str, assignment_id: str, user_id: str, 
+                                comment: str):
         pass
 
     @abstractmethod
-    def put_rubric_assessment_comment(self, course_id: str, rubric_association_id: str,
+    def put_rubric_assessment_comments(self, course_id: str, rubric_association_id: str,
                                       rubric_assessment_id: str, user_id: str, criterion_id: str,
-                                      comment: str):
+                                      criterion_score: float, comment: str):
         pass
 

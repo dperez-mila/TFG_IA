@@ -5,37 +5,37 @@
 				"name": "Preguntes de disseny",
 				"max_score": 20.0,
 				"score": 16.0,
-				"comments": "Has fet un bon treball en formular les preguntes de disseny, capturant els aspectes essencials del projecte. Tanmateix, podríeu beneficiar-vos de detallar més sobre com aquestes decisions de disseny afecten positivament l'experiència de l'usuari. Una acció per a millorar seria vincular més clarament les teves preguntes amb exemples específics de solucions que es podrien aplicar en l'entorn real."
+				"comments": "Les teves respostes a les preguntes de disseny mostren una bona comprensió del problema i dels objectius del client. No obstant això, pots millorar afegint més detalls sobre les estratègies específiques per atraure el públic jove. Podries incloure exemples concrets de com implementaries aquests canvis per fer-los més atractius i juvenils."
 			},
 			{
 				"name": "Benchmarking",
 				"max_score": 20.0,
 				"score": 16.0,
-				"comments": "Has realitzat una anàlisi competitiva correcta, no obstant això, encara hi ha l'oportunitat de profunditzar en l'anàlisi de cada lloc per extraure detalls més crítics que podrien millorar significativament el teu projecte. Considera comparar els aspectes de funcionalitat més detalladament entre els llocs, i com podrien aplicar-se això en el teu disseny per crear una experiència única i adaptada."
+				"comments": "L'anàlisi del benchmarking està ben enfocat i aporta informació rellevant. Assegura't de destacar com les conclusions obtingudes poden aplicar-se al teu projecte de redisseny per millorar l'atractiu visual i juvenil de la web."
 			},
 			{
 				"name": "Anàlisi heurística",
-				"max_was_score": 10.0,
+				"max_score": 10.0,
 				"score": 8.0,
-				"comments": "Realitzes una bona anàlisi heurística tot identificant la majoria dels problemes evidents. No obstant, seria útil oferir solucions més detallades envers els errors identificats i explorar diferents opcions d'interacció que millorin l'usabilitat del lloc. Recomano revisar els principis d'usabilitat per assegurar que cadascun es compleixi en la teva proposta de redisseny."
+				"comments": "L'anàlisi heurística és correcte, però esmenta que hi ha aspectes a millorar. Fes èmfasi en la resolució dels problemes detectats, com la revisió dels botons, l'ordenació del contingut i la claredat de la informació per a usuaris amb diferents nivells d'experiència."
 			},
 			{
 				"name": "Arquitectura de la informació",
 				"max_score": 40.0,
 				"score": 32.0,
-				"comments": "Has organitzat adequadament els continguts i els has estructurat coherentment. Tot i això, es podrien millorar l'accessibilitat i la navegabilitat enhorabonant les etiquetes i el meta-data utilitzat. Considereu realitzar tests amb usuaris per validar la efectivitat de l'estructura proposada i iterar segons el feedback rebre."
+				"comments": "La creació de l'arbre de continguts i els wireframes reflecteixen una bona comprensió de l'estructura i la jerarquia de la informació del web. Assegura't de justificar els canvis proposats per a millorar la navegació, la facilitat d'ús i l'aparença juvenil de la web."
 			},
 			{
 				"name": "Presentació",
 				"max_score": 10.0,
 				"score": 6.0,
-				"comments": "La presentació de la teva PAC mostra esforç, però falta una uniformitat estilística i una millor organització de la informació presentada. Una millora significativa seria seguir normes estrictes de disseny en la teva proposta, incloent la consistència en els tipus de lletra, mida i color per garantir una navegació coherent i professional."
+				"comments": "La presentació del document és satisfactòria, però pot millorar-se. Considera afegir elements visuals i organitzar la informació d'una manera més atractiva i clara per a una millor presentació del teu treball."
 			}
 		],
 		"general_comments": {
-			"intro_positive_comments": "En general, el teu lliurament indica una comprensió clara del projecte encarregat, mostrant una bona capacitat d'investigació i anàlisi.",
-			"areas_for_improvement": "Per continuar millorant, seria útil profunditzar en l'anàlisi especifica de cada criteri revisant amb deteniment les expectatives de l'usuari i mirant com innovar més allà dels competidors. Potser podríeu utilitzar les interaccions amb els companys i el professorce del curs per adquirir nous punts de vista que enriqueixin el teu treball. També, una revisió més exhaustiva dels components visuals del teu lliurament beneficiaria la presentació final, ajudant a una millor comprensió del contingut.",
-			"final_positive_comments": "Segueix treballant fort com fins ara, fent ús de tots els recursos disponibles com els materials del curs i el suport del professor. Tens un bon inici i amb una mica més de poliment, pots arribar a excel·lents resultats."
+			"intro_positive_comments": "Has demostrat un bon nivell de comprensió de les tasques i has fet un esforç notable en l'anàlisi i redisseny de la web del Parc d'Atraccions del Tibidabo.",
+			"areas_for_improvement": "Per a enfortir el teu lliurament, et recomano afegir més detalls i exemples concrets sobre com implementaries els canvis suggerits, millorar la presentació del document amb elements visuals i justificar amb més profunditat les teves decisions de disseny.",
+			"final_positive_comments": "Continua treballant en les teves habilitats d'anàlisi i disseny, ja que tens un gran potencial per millorar i créixer en aquest àmbit. Amb dedicació i atenció als detalls, estic segur que aconseguiràs excel·lents resultats en les teves pròximes tasques."
 		},
 		"final_score": 78.0
 	}

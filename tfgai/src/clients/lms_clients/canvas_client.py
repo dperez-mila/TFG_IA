@@ -48,28 +48,19 @@ class CanvasClient(LMSClient):
         
         return [self._get(f"courses/{course_id}/users/{user_id}", params)]
 
-    def put_submission_comment(self, course_id: str, assignment_id: str, user_id: str, comment: str):
-        data = {"comment": {"text_comment": comment}}
+    def put_submission_comment(self, course_id: str, assignment_id: str, user_id: str, data: dict):
         self._put(f"courses/{course_id}/assignments/{assignment_id}/submissions/{user_id}", data)
 
-    def put_rubric_assessment_comment(self, course_id: str, rubric_association_id: str,
-                                      rubric_assessment_id: str, user_id: str, criterion_id: str,
-                                      comment: str):
+    def put_rubric_assessment_comments(self, course_id: str, rubric_association_id: str,
+                                      rubric_assessment_id: str, rubric_assessment_data: dict):
         endpoint = (
-            f"/courses/{course_id}"
+            f"courses/{course_id}"
             f"/rubric_associations/{rubric_association_id}"
             f"/rubric_assessments/{rubric_assessment_id}"
         )
         data = {
-            "rubric_assessment": {
-                "user_id": user_id,
-                "assessment_type": "grading", 
-                f"criterion_{criterion_id}": {
-                    #"points": score,
-                    "comments": comment
-                }
-            }
+            **rubric_assessment_data
         }
-
+        
         self._put(endpoint, data)
 
