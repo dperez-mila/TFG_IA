@@ -190,7 +190,8 @@ class ServiceManager():
             {feedback_json["general_comments"]["final_positive_comments"]}
         """
         
-        self._lms_service.put_submission_comments(course_id, assignment_id, user_id, general_comments)
+        self._lms_service.put_submission_comments(course_id, assignment_id, user_id,
+                                                  general_comments)
         
     def put_rubric_assessment_comments(self, course_id: str, assignment_id: str, user_id: str):
         feedback_str = read_txt_file(RESPONSE_FILEPATH)

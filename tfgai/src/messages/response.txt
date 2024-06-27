@@ -4,39 +4,39 @@
 			{
 				"name": "Preguntes de disseny",
 				"max_score": 20.0,
-				"score": 16.0,
-				"comments": "Les teves respostes a les preguntes de disseny mostren una bona comprensió del problema i dels objectius del client. No obstant això, pots millorar afegint més detalls sobre les estratègies específiques per atraure el públic jove. Podries incloure exemples concrets de com implementaries aquests canvis per fer-los més atractius i juvenils."
+				"score": 20.0,
+				"comments": "Les respostes a les preguntes de disseny mostren una clara investigació i reflexió prèvia, oferint una resposta excel·lent que compleix totalment amb el criteri. Felicitats per abordar les preguntes amb detall i coherència."
 			},
 			{
 				"name": "Benchmarking",
 				"max_score": 20.0,
 				"score": 16.0,
-				"comments": "L'anàlisi del benchmarking està ben enfocat i aporta informació rellevant. Assegura't de destacar com les conclusions obtingudes poden aplicar-se al teu projecte de redisseny per millorar l'atractiu visual i juvenil de la web."
+				"comments": "L'anàlisi de benchmarking és notable, però es podria millorar analitzant més a fons les tendències de disseny identificades en altres llocs web. Es recomana explorar més en detall les característiques rellevants trobades i aplicar-les al teu projecte."
 			},
 			{
 				"name": "Anàlisi heurística",
 				"max_score": 10.0,
 				"score": 8.0,
-				"comments": "L'anàlisi heurística és correcte, però esmenta que hi ha aspectes a millorar. Fes èmfasi en la resolució dels problemes detectats, com la revisió dels botons, l'ordenació del contingut i la claredat de la informació per a usuaris amb diferents nivells d'experiència."
+				"comments": "L'anàlisi heurística és notable, però es podrien identificar millor i detallar alguns problemes d'usabilitat en el lloc web analitzat. Per millorar, és recomanable centrar-se en la resolució dels problemes detectats per millorar l'experiència de l'usuari."
 			},
 			{
 				"name": "Arquitectura de la informació",
 				"max_score": 40.0,
-				"score": 32.0,
-				"comments": "La creació de l'arbre de continguts i els wireframes reflecteixen una bona comprensió de l'estructura i la jerarquia de la informació del web. Assegura't de justificar els canvis proposats per a millorar la navegació, la facilitat d'ús i l'aparença juvenil de la web."
+				"score": 40.0,
+				"comments": "L'arbre de continguts i els wireframes són excel·lents, reflectint una estructura clara i ben planificada per al redisseny de la web del Parc d'Atraccions del Tibidabo. Felicitats per la minuciositat i la cohesió en l'organització del contingut."
 			},
 			{
 				"name": "Presentació",
 				"max_score": 10.0,
-				"score": 6.0,
-				"comments": "La presentació del document és satisfactòria, però pot millorar-se. Considera afegir elements visuals i organitzar la informació d'una manera més atractiva i clara per a una millor presentació del teu treball."
+				"score": 8.0,
+				"comments": "La presentació del document és notable, però es podrien millorar alguns aspectes com la consistència en l'estil gràfic i la cohesió en la presentació de la informació. És recomanable revisar detingudament la presentació per aconseguir una major professionalitat."
 			}
 		],
 		"general_comments": {
-			"intro_positive_comments": "Has demostrat un bon nivell de comprensió de les tasques i has fet un esforç notable en l'anàlisi i redisseny de la web del Parc d'Atraccions del Tibidabo.",
-			"areas_for_improvement": "Per a enfortir el teu lliurament, et recomano afegir més detalls i exemples concrets sobre com implementaries els canvis suggerits, millorar la presentació del document amb elements visuals i justificar amb més profunditat les teves decisions de disseny.",
-			"final_positive_comments": "Continua treballant en les teves habilitats d'anàlisi i disseny, ja que tens un gran potencial per millorar i créixer en aquest àmbit. Amb dedicació i atenció als detalls, estic segur que aconseguiràs excel·lents resultats en les teves pròximes tasques."
+			"intro_positive_comments": "Enhorabona per l'excel·lent treball realitzat en l'activitat Lliurament PAC1 (v2) de l'assignatura Prova AD PoC IA. Has demostrat una comprensió profunda dels criteris d'avaluació i has abordat de manera notable molts aspectes importants.",
+			"areas_for_improvement": "Com a àrees per a millorar, es suggereix prestar més atenció a l'anàlisi detallada del benchmarking, aprofundir en la identificació i resolució de problemes d'usabilitat, millorar la consistència en la presentació del document i explorar la integració d'elements innovadors en el disseny.",
+			"final_positive_comments": "Continua amb l'esforç i la dedicació demostrats en aquest lliurament, ja que estàs en el bon camí per aconseguir resultats excepcionals. Aprofita les eines a la teva disposició i no dubtis a buscar feedback addicional per seguir millorant en el teu progrés acadèmic."
 		},
-		"final_score": 78.0
+		"final_score": 92.0
 	}
 }

@@ -1,5 +1,5 @@
-import fitz.fitz
-import io, requests, fitz
+import io, requests
+import fitz
 
 def pdf_content_from_url(url: str) -> str:
     response = requests.get(url)
@@ -12,8 +12,9 @@ def pdf_content_from_file_path(file_path: str) -> str:
     doc = fitz.open(file_path)
     return _extract_pdf_content(doc)
 
-def _extract_pdf_content(doc: fitz.fitz.Document):
+def _extract_pdf_content(doc: fitz.Document):
     content = ''
     for page in doc:
         content += page.get_text()
     return content
+

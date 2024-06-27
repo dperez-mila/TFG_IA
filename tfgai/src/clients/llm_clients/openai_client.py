@@ -17,5 +17,6 @@ class OpenAIClient(LLMClient):
             messages=prompt,
             **options
         )
+        
         return response.choices[0].message.content
     
